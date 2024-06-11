@@ -1,7 +1,14 @@
-const app = require('./app');
+const express = require('express');
+const serverless = require('serverless-http');
 
-const PORT = process.env.PORT || 7000;
+const app = express();
+const router = express.Router();
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Include your routes and middleware here
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use('/api', require('./routes')); // Adjust the path if necessary
+
+app.use('/.netlify/functions/server', router);
+
+module.exports.handler = serverless(app);
